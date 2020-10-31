@@ -75,13 +75,13 @@ public class Person {
 	
 	@Override
 	public String toString() {
-		return "First Name: " + fName + "\n" +
+		return "\nFirst Name: " + fName + "\n" +
 			   "Last Name: " + lName + "\n" + 
 			   "Address: " + address + "\n" + 
 			   "City: " + city + "\n" + 
 			   "State: " + state + "\n" + 
 			   "Zip: " + zip + "\n" + 
 			   "Phone: " + phone + "\n" + 
-			   "Email: " + email;
+			   "Email: " + email + "\n";
 	}
 }
