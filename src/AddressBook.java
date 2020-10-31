@@ -1,8 +1,11 @@
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 interface Functionality {
+	void createAddressBook();
 	void addPerson();
 	void displayPerson();
 	void editPerson();
@@ -11,11 +14,75 @@ interface Functionality {
 
 public class AddressBook implements Functionality{
 	
-	List<Person> personlist = new LinkedList<Person>();
+	Map<String, List<Person>> addressBook = new HashMap<String, List<Person>>();
+	String[] addressList = new String[20];
+	int countAddressbook = 0;
+	String addressKey;
 	Scanner scanner = new Scanner(System.in);
+	
+	public void createAddressBook() {
+		
+		System.out.println("Enter the name of address book do you want to create: ");
+		addressList[countAddressbook] = scanner.nextLine();
+		addressBook.put(addressList[countAddressbook], new LinkedList<Person>());
+		countAddressbook++;
+		System.out.println("Address Book Created");
+		
+	}
+	
+	public void getAddressBook() 
+	{
+
+		System.out.println("Your Address Book are: ");
+		
+		for (int addressSelect = 0; addressSelect < countAddressbook; addressSelect++) {
+			System.out.println(addressSelect+1 + " " + addressList[addressSelect]);
+		}
+			
+	}
+	
+	public void selectAddressBook()
+	{
+		int correctChoice=0;
+		
+		while ( correctChoice==0 ) 
+		{
+			System.out.println("Please Select Your address book");
+			int select = scanner.nextInt();
+			try
+			{
+				addressKey = addressList[select-1];
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				System.out.println("Please select correct addressbook ");
+				continue;
+			}
+			scanner.nextLine();
+			
+			if (addressBook.get(addressKey)!=null)
+			{
+				correctChoice=1;
+			}
+		
+			else
+			{
+				System.out.println("Please select correct addressbook");
+			}
+			
+		}
+	}
 	
 	public void addPerson()
 	{
+		if(countAddressbook == 0)
+		{
+			System.out.println("There is no Address Book present. Please Create one AddressBook");
+			return;
+		}
+		
+		getAddressBook();
+		selectAddressBook();
 		
 		Person person = new Person();
 		
@@ -44,24 +111,37 @@ public class AddressBook implements Functionality{
         person.setState(state);
         person.setPhone(phone);
         person.setEmail(email);
+    
+        List<Person> personList = addressBook.get(addressKey);
+        personList.add(person);
+        addressBook.put(addressKey,personList);
         
-        personlist.add(person);
-
         System.out.println("Contact Added.");
         
 	}
 	
 	public void displayPerson() {
 		
-		if(personlist.size()==0)
+		if(countAddressbook == 0)
+		{
+			System.out.println("There is no Address Book present. Please Create one AddressBook");
+			return;
+		}
+		
+		getAddressBook();
+		selectAddressBook();
+		
+		List<Person> personList = addressBook.get(addressKey);
+		
+		if(personList.size()==0)
 		{
 			System.out.println("No Contact Found");
 		}
 		else
 		{
-			for (int index = 0; index < personlist.size(); index++) 
+			for (int index = 0; index < personList.size(); index++) 
 			{
-				System.out.println(personlist.get(index));
+				System.out.println(personList.get(index));
 			}
 		}
 		
@@ -69,13 +149,24 @@ public class AddressBook implements Functionality{
 	
 	public void editPerson() {
 		
+		if(countAddressbook == 0)
+		{
+			System.out.println("There is no Address Book present. Please Create one AddressBook");
+			return;
+		}
+		
+		getAddressBook();
+		selectAddressBook();
+		
+		List<Person> personList = addressBook.get(addressKey);
+		
 		System.out.println("Enter First Name do you want to edit: ");
 		String enteredFirstName = scanner.nextLine();
 		int choice = 0, contactFound = 0;
 		
-		for (int index = 0; index < personlist.size(); index++) 
+		for (int index = 0; index < personList.size(); index++) 
 		{
-			String fname = personlist.get(index).getfName();
+			String fname = personList.get(index).getfName();
 		
 			if(fname.equalsIgnoreCase(enteredFirstName)) 
 			{
@@ -99,37 +190,37 @@ public class AddressBook implements Functionality{
 						case 1:
 							 System.out.println("Enter First Name ");
 							 String fName = scanner.nextLine();
-							 personlist.get(index).setfName(fName);
+							 personList.get(index).setfName(fName);
 							 break;
 				     	case 2:
 				             System.out.println("Enter Last Name");
 				             String lName = scanner.nextLine();
-				             personlist.get(index).setlName(lName);
+				             personList.get(index).setlName(lName);
 				             break;
 				        case 3:
 				             System.out.println("Enter Address");
 				             String address = scanner.nextLine();
-				             personlist.get(index).setAddress(address);
+				             personList.get(index).setAddress(address);
 				             break;
 				        case 4:
 				             System.out.println("Enter City");
 				             String city = scanner.nextLine();
-				             personlist.get(index).setCity(city);
+				             personList.get(index).setCity(city);
 				             break;
 				        case 5:
 				             System.out.println("Enter State");
 				             String state = scanner.nextLine();
-				             personlist.get(index).setState(state);
+				             personList.get(index).setState(state);
 				             break;
 				        case 6:
 				             System.out.println("Enter Zip Code");
 				             String zip=scanner.nextLine();
-				             personlist.get(index).setZip(zip);
+				             personList.get(index).setZip(zip);
 				             break;
 				        case 7:
 				             System.out.println("Enter Phone Number");
 				             String phone = scanner.nextLine();
-				             personlist.get(index).setPhone(phone);
+				             personList.get(index).setPhone(phone);
 				             break;
 				        default:
 				             System.out.println("please select valid option");
@@ -157,17 +248,29 @@ public class AddressBook implements Functionality{
 	}
 	
 	public void deletePerson() {
+		
+		if(countAddressbook == 0)
+		{
+			System.out.println("There is no Address Book present. Please Create one AddressBook");
+			return;
+		}
+		
+		getAddressBook();
+		selectAddressBook();
+		
+		List<Person> personList = addressBook.get(addressKey);
+		
 		System.out.println("Enter First Name do you want to delete: ");
 		String enteredFirstName = scanner.nextLine();
 		int contactFound = 0;
 		
-		for (int index = 0; index < personlist.size(); index++) 
+		for (int index = 0; index < personList.size(); index++) 
 		{
-			String fname = personlist.get(index).getfName();
+			String fname = personList.get(index).getfName();
 			if(fname.equalsIgnoreCase(enteredFirstName)) 
 			{
 				contactFound = 1;
-				personlist.remove(index);
+				personList.remove(index);
 				System.out.println("Contact Deleted");
 			}
 		}
