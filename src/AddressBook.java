@@ -4,6 +4,7 @@ interface Functionality {
 	void addPerson();
 	void displayPerson();
 	void editPerson();
+	void deletePerson();
 }
 
 public class AddressBook implements Functionality{
@@ -40,6 +41,8 @@ public class AddressBook implements Functionality{
         person.setPhone(phone);
         person.setEmail(email);
 
+        System.out.println("Contact Added.");
+        
 	}
 	
 	public void displayPerson() {
@@ -119,13 +122,37 @@ public class AddressBook implements Functionality{
 				}
 				
 			} while(choice == 1);
-					 	 
+		
+			System.out.println("Contact Updated");
+			
 		}
 		else
 		{
 			System.out.println("Contact doesn't exist");
 		}
 		
+	}
+	
+	public void deletePerson() {
+		System.out.println("Enter First Name do you want to delete: ");
+		String enteredFirstName = scanner.nextLine();
+		String fname = person.getfName();
+		if(fname.equalsIgnoreCase(enteredFirstName)) 
+		{
+			person.setAddress(null);
+			person.setCity(null);
+			person.setEmail(null);
+			person.setfName(null);
+			person.setlName(null);
+			person.setPhone(null);
+			person.setState(null);
+			person.setZip(null);
+			System.out.println("Contact Deleted");
+		}
+		else
+		{
+			System.out.println("Contact doesn't exist");
+		}
 	}
 	
 }
